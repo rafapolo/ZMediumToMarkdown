@@ -24,13 +24,9 @@ class Helper
     end
 
     def self.escapeHTML(text)
-        if text == "<"
-            "&lt;"
-        elsif text == ">"
-            "&gt;"
-        else
-            text
-        end
+        text = text.gsub(/(<)/, '&lt;')
+        text = text.gsub(/(>)/, '&gt;')
+        text
     end
 
     def self.createDirIfNotExist(dirPath)
@@ -98,22 +94,31 @@ class Helper
         end
     end
 
-    def self.createPostInfo(postInfo, isForJekyll)
-        title = postInfo.title.gsub("[","")
-        title = title.gsub("]","")
+    def self.createPostInfo(postInfo, isPin, isForJekyll)
+        title = postInfo.title&.gsub("[","")
+        title = title&.gsub("]","")
+
+        tags = ""
+        if !postInfo.tags.nil? && postInfo.tags.length > 0
+            tags = "\"#{postInfo.tags.map { |tag| tag&.gsub("\"", "\\\"") }.join("\",\"")}\""
+        end
 
         result = "---\n"
-        result += "title: #{title}\n"
-        result += "author: #{postInfo.creator}\n"
+        result += "title: \"#{title&.gsub("\"", "\\\"")}\"\n"
+        result += "author: \"#{postInfo.creator&.gsub("\"", "\\\"")}\"\n"
         result += "date: #{postInfo.firstPublishedAt.strftime('%Y-%m-%dT%H:%M:%S.%L%z')}\n"
         result += "last_modified_at: #{postInfo.latestPublishedAt.strftime('%Y-%m-%dT%H:%M:%S.%L%z')}\n"
-        result += "categories: #{postInfo.collectionName}\n"
-        result += "tags: [#{postInfo.tags.join(",")}]\n"
-        result += "description: #{postInfo.description}\n"
+        result += "categories: \"#{postInfo.collectionName&.gsub("\"", "\\\"")}\"\n"
+        result += "tags: [#{tags}]\n"
+        result += "description: \"#{postInfo.description&.gsub("\"", "\\\"")}\"\n"
         if !postInfo.previewImage.nil?
             result += "image:\r\n"
-            result += "  path: #{postInfo.previewImage}\r\n"
+            result += "  path: /#{postInfo.previewImage}\r\n"
         end
+        if !isPin.nil? && isPin == true
+            result += "pin: true\r\n"
+        end
+
         if isForJekyll
             result += "render_with_liquid: false\n"
         end
@@ -196,7 +201,7 @@ class Helper
         end
 
         text = "\r\n\r\n\r\n"
-        text += "_Converted [Medium Post](#{postURL})#{jekyllOpen} by [ZMediumToMarkdown](https://github.com/ZhgChgLi/ZMediumToMarkdown)#{jekyllOpen}._"
+        text += "_[Post](#{postURL})#{jekyllOpen} converted from Medium by [ZMediumToMarkdown](https://github.com/ZhgChgLi/ZMediumToMarkdown)#{jekyllOpen}._"
         text += "\r\n"
 
         text

@@ -197,28 +197,30 @@ class MarkupStyleRender
                     elsif markup.anchorType == "USER"
                         url = "https://medium.com/u/#{markup.userId}"
                     end
-                    
-                    lastPath = url.split("/").last
-                    lastQuery = nil
-                    if !lastPath.nil?
-                        lastQuery = lastPath.split("-").last
-                    end
-                    
-                    if !usersPostURLs.nil? && !usersPostURLs.find { |usersPostURL| usersPostURL.split("/").last.split("-").last == lastQuery }.nil?
-                        if isForJekyll
-                            url = "(../#{lastQuery}/)"
-                        else
-                            url = "(#{lastPath})"
-                        end
-                    else
-                        if isForJekyll
-                            url = "(#{url}){:target=\"_blank\"}"
-                        else
-                            url = "(#{url})"
-                        end
-                    end
 
-                    tag = TagChar.new(1, markup.start, markup.end, "[", "]#{url}")
+                    if url =~ /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}(:[0-9]{1,5})?(\/.*)?$/ix
+                        lastPath = url.split("/").last
+                        lastQuery = nil
+                        if !lastPath.nil?
+                            lastQuery = lastPath.split("-").last
+                        end
+                        
+                        if !usersPostURLs.nil? && !usersPostURLs.find { |usersPostURL| usersPostURL.split("/").last.split("-").last == lastQuery }.nil?
+                            if isForJekyll
+                                url = "(../#{lastQuery}/)"
+                            else
+                                url = "(#{lastPath})"
+                            end
+                        else
+                            if isForJekyll
+                                url = "(#{url}){:target=\"_blank\"}"
+                            else
+                                url = "(#{url})"
+                            end
+                        end
+                        
+                        tag = TagChar.new(1, markup.start, markup.end, "[", "]#{url}")
+                    end
                 else
                     Helper.makeWarningText("Undefined Markup Type: #{markup.type}.")
                 end
@@ -270,10 +272,6 @@ class MarkupStyleRender
                         response.append(char)
                     else
                         resultChar = Helper.escapeMarkdown(char.chars.join())
-                        if isForJekyll 
-                            resultChar = Helper.escapeHTML(resultChar)
-                        end
-    
                         response.append(TextChar.new(resultChar.chars, "Text"))
                     end
                 end
@@ -313,10 +311,6 @@ class MarkupStyleRender
             response = []
             chars.each do |index, char|
                 resultChar = char
-                if isForJekyll 
-                    resultChar = escapeHTML(char)
-                end
-
                 response.append(resultChar)
             end
 
