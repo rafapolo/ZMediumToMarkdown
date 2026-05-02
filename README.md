@@ -10,6 +10,7 @@ This project can help you create an auto-sync or auto-backup service from Medium
 
 - [中文](https://medium.com/zrealm-ios-dev/converting-medium-posts-to-markdown-ddd88a84e177)
 
+
 ## Features
 - [x] Supports downloading posts and converting them to markdown format
 - [x] Supports downloading all posts and converting them to markdown format from any user without requiring login access
@@ -25,8 +26,15 @@ This project can help you create an auto-sync or auto-backup service from Medium
 - [x] Highly optimized markdown format for Medium
 - [x] Native Markdown-style Render Engine
 (Feel free to contribute if you have any optimization ideas! MarkupStyleRender.rb)
+- [x] **Supports paywall posts.** (Requires providing valid Medium Member cookies)
 - [x] Jekyll and social share (og: tag) friendly
 - [x] 100% Ruby @ RubyGem
+
+# Buy me a beer ❤️❤️❤️
+
+[![Buy Me A Beer](https://github.com/user-attachments/assets/63f01edf-2aa5-4d91-8f8a-861e5b6b4feb)](https://www.paypal.com/ncp/payment/CMALMPT8UUTY2)
+
+[**If this project has helped you, feel free to sponsor me a cup of coffee, thank you.**](https://www.paypal.com/ncp/payment/CMALMPT8UUTY2)
 
 ## Result
 - [Original post on Medium](https://medium.com/zrealm-ios-dev/avplayer-%E5%AF%A6%E8%B8%90%E6%9C%AC%E5%9C%B0-cache-%E5%8A%9F%E8%83%BD%E5%A4%A7%E5%85%A8-6ce488898003)
@@ -35,18 +43,21 @@ This project can help you create an auto-sync or auto-backup service from Medium
 
 and I use this tool to convert from Meidum to [jekyllrb](https://zhgchg.li/)
 
-## Setup
+## medium-to-jekyll-starter
 
-### 2023/07/17 Update 🎉
-
-I have just created a brand new GitHub repository template that allows you to move your Medium blog to your own Jekyll blog with just one click. Check it out: [ZMediumToJekyll](https://github.com/ZhgChgLi/ZMediumToJekyll).
+I have just created a brand new GitHub repository template that allows you to move your Medium blog to your own Jekyll blog with just one click. Check it out: [medium-to-jekyll-starter](https://github.com/ZhgChgLi/medium-to-jekyll-starter.github.io).
 
 ### I'M NOT GEEK, PLEASE SHOW ME HOW TO USE WITHOUT CODING
+
 - Please follow this post, step by step to creat your auto backup service without any coding:
 
 [How to use Github Action as your free & no code Medium Posts backup service](https://github.com/ZhgChgLi/ZMediumToMarkdown/wiki/How-to-use-Github-Action-as-your-free-&-no-code-Medium-Posts-backup-service)
 
-### 2024/01/27 Update: Docker 🎉
+---
+
+## Setup
+
+### Docker
 1. make sure has [Docker](https://www.docker.com/products/docker-desktop/) on your system.
 2. git clone this repo `git clone https://github.com/ZhgChgLi/ZMediumToMarkdown`
 3. `cd /ZMediumToMarkdown`
@@ -59,7 +70,7 @@ I have just created a brand new GitHub repository template that allows you to mo
 
 ### Using Gem
 #### If you are familiar with ruby:
-1. make sure you have Ruby in your environment (I use `2.7.5`)
+1. make sure you have Ruby in your environment (I use `3.4.2`)
 2. make sure you have Bundle in your environment (I use `2.3.13`)
 3. type `gem install ZMediumToMarkdown` in terminal
 
@@ -98,6 +109,26 @@ ZMediumToMarkdown -c
 ```
 ZMediumToMarkdown -v
 ```
+
+**Provide valid Medium Member cookies to access paywall posts**
+ZMediumToMarkdown requires uid and sid cookies to access paywalled posts on Medium.
+
+If you don’t provide valid Medium Member cookies, you will receive this warning message while downloading a Medium post if the post is behind a paywall:
+> This post is behind Medium's paywall. You must provide valid Medium Member login cookies to download the full post.
+
+```
+ZMediumToMarkdown --cookie_uid uid --cookie_sid sid
+```
+
+You can obtain `cookie_uid` and `cookie_sid` from Medium by following these steps:
+1. Log in to a valid Medium Member account.
+2. Right-click anywhere on the Medium webpage.
+3. Select "Inspect" to open the Developer Tools.
+4. Navigate to the "Application" tab and locate the `sid` and `uid` values under "Cookies."
+
+![ZhgChgLi-2024-08-11_22-30-03](https://github.com/user-attachments/assets/35229d1d-501a-4ecf-8f3e-592a02416bb1)
+
+
 
 #### For Jeklly Dir Friendly
 
@@ -198,14 +229,16 @@ jobs:
 ### Swift Libraries
 - [ZMarkupParser](https://github.com/ZhgChgLi/ZMarkupParser) is a pure-Swift library that helps you to convert HTML strings to NSAttributedString with customized style and tags.
 - [ZPlayerCacher](https://github.com/ZhgChgLi/ZPlayerCacher) is a lightweight implementation of the AVAssetResourceLoaderDelegate protocol that enables AVPlayerItem to support caching streaming files.
-- [ZNSTextAttachment](https://github.com/ZhgChgLi/ZNSTextAttachment) enables NSTextAttachment to download images from remote URLs, support both UITextView and UILabel.
 
 ### Integration Tools
+- [XCFolder](https://github.com/ZhgChgLi/XCFolder) is a powerful command-line tool that converts Xcode virtual groups into actual directories, reorganizing your project structure to align with Xcode groups and enabling seamless integration with modern Xcode project generation tools like Tuist and XcodeGen.
 - [ZReviewTender](https://github.com/ZhgChgLi/ZReviewTender) is a tool for fetching app reviews from the App Store and Google Play Console and integrating them into your workflow.
 - [ZMediumToMarkdown](https://github.com/ZhgChgLi/ZMediumToMarkdown) is a powerful tool that allows you to effortlessly download and convert your Medium posts to Markdown format.
+- [linkyee](https://github.com/ZhgChgLi/linkyee) is a fully customized, open-source LinkTree alternative deployed directly on GitHub Pages.
 
 # Donate
-[![Buy Me A Coffe](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20beer!&emoji=%F0%9F%8D%BA&slug=zhgchgli&button_colour=FFDD00&font_colour=000000&font_family=Bree&outline_colour=000000&coffee_colour=ffffff)](https://www.buymeacoffee.com/zhgchgli)
+
+[![Buy Me A Beer](https://github.com/user-attachments/assets/63f01edf-2aa5-4d91-8f8a-861e5b6b4feb)](https://www.paypal.com/ncp/payment/CMALMPT8UUTY2)
 
 If you find this library helpful, please consider starring the repo or recommending it to your friends.
 

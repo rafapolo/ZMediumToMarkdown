@@ -1,6 +1,7 @@
 $lib = File.expand_path('../lib', File.dirname(__FILE__))
 
 require "Request"
+require "net/http"
 require 'uri'
 require 'nokogiri'
 require 'json'
@@ -50,10 +51,11 @@ class Post
       }
     ]
 
-    body = Request.body(Request.URL("https://medium.com/_/graphql", "POST", query))
+    host = ENV.fetch('MEDIUM_HOST', 'https://medium.com/_/graphql')
+    body = Request.body(Request.URL(host, method = 'POST', data = query));
     if !body.nil?
       json = JSON.parse(body)
-      json&.dig(0, "data", "post", "viewerEdge", "fullContent", "bodyModel", "paragraphs")
+      json&.dig(0, "data", "post", "viewerEdge", "fullContent")
     else
       nil
     end
@@ -73,7 +75,8 @@ class Post
       
       absolutePath = imagePathPolicy.getAbsolutePath(previewImageFIleName)
 
-      imageURL = "https://miro.medium.com/max/1400/#{previewImageFIleName}"
+      miro_host = ENV.fetch('MIRO_MEDIUM_HOST', 'https://miro.medium.com')
+      imageURL = "#{miro_host}/#{previewImageFIleName}"
 
       if  ImageDownloader.download(absolutePath, imageURL)
           relativePath = imagePathPolicy.getRelativePath(previewImageFIleName)

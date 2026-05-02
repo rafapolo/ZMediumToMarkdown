@@ -23,9 +23,14 @@ class Helper
         text.gsub(/(\*|_|`|\||\\|\{|\}|\[|\]|\(|\)|#|\+|\-|\.|\!)/){ |x| "\\#{x}" }
     end
 
-    def self.escapeHTML(text)
-        text = text.gsub(/(<)/, '&lt;')
-        text = text.gsub(/(>)/, '&gt;')
+    def self.escapeHTML(text, toHTMLEntity = true)
+        if toHTMLEntity
+            text = text.gsub(/(<)/, '&lt;')
+            text = text.gsub(/(>)/, '&gt;')
+        else
+            text = text.gsub(/(<)/, '\<')
+            text = text.gsub(/(>)/, '\>')
+        end
         text
     end
 
@@ -35,7 +40,7 @@ class Helper
         begin
             dir = dirs.shift
             currentDir = "#{currentDir}/#{dir}"
-            Dir.mkdir(currentDir) unless File.exists?(currentDir)
+            Dir.mkdir(currentDir) unless File.exist?(currentDir)
         end while dirs.length > 0
     end
 
@@ -94,7 +99,7 @@ class Helper
         end
     end
 
-    def self.createPostInfo(postInfo, isPin, isForJekyll)
+    def self.createPostInfo(postInfo, isPin, isLockedPreviewOnly, isForJekyll)
         title = postInfo.title&.gsub("[","")
         title = title&.gsub("]","")
 
@@ -108,7 +113,7 @@ class Helper
         result += "author: \"#{postInfo.creator&.gsub("\"", "\\\"")}\"\n"
         result += "date: #{postInfo.firstPublishedAt.strftime('%Y-%m-%dT%H:%M:%S.%L%z')}\n"
         result += "last_modified_at: #{postInfo.latestPublishedAt.strftime('%Y-%m-%dT%H:%M:%S.%L%z')}\n"
-        result += "categories: \"#{postInfo.collectionName&.gsub("\"", "\\\"")}\"\n"
+        result += "categories: [\"#{postInfo.collectionName&.gsub("\"", "\\\"")}\"]\n"
         result += "tags: [#{tags}]\n"
         result += "description: \"#{postInfo.description&.gsub("\"", "\\\"")}\"\n"
         if !postInfo.previewImage.nil?
@@ -117,6 +122,9 @@ class Helper
         end
         if !isPin.nil? && isPin == true
             result += "pin: true\r\n"
+        end
+        if !isLockedPreviewOnly.nil? && isLockedPreviewOnly == true
+            result += "lockedPreviewOnly: true\r\n"
         end
 
         if isForJekyll
@@ -202,6 +210,19 @@ class Helper
 
         text = "\r\n\r\n\r\n"
         text += "_[Post](#{postURL})#{jekyllOpen} converted from Medium by [ZMediumToMarkdown](https://github.com/ZhgChgLi/ZMediumToMarkdown)#{jekyllOpen}._"
+        text += "\r\n"
+
+        text
+    end
+
+    def self.createViewFullPost(postURL, isForJekyll)
+        jekyllOpen = ""
+        if isForJekyll
+            jekyllOpen = "{:target=\"_blank\"}"
+        end
+
+        text = "\r\n\r\n\r\n"
+        text += "**This [post](#{postURL})#{jekyllOpen} is behind Medium's paywall, View the full [post](#{postURL})#{jekyllOpen} on Medium, converted by [ZMediumToMarkdown](https://github.com/ZhgChgLi/ZMediumToMarkdown)#{jekyllOpen}.**"
         text += "\r\n"
 
         text
