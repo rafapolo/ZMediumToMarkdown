@@ -27,6 +27,7 @@ This project can help you create an auto-sync or auto-backup service from Medium
 - [x] Native Markdown-style Render Engine
 (Feel free to contribute if you have any optimization ideas! MarkupStyleRender.rb)
 - [x] **Supports paywall posts.** (Requires providing valid Medium Member cookies)
+- [x] **Full multilingual support** - Correctly handles CJK (Chinese/Japanese/Korean), Arabic, Hebrew, Cyrillic, and emoji characters
 - [x] Jekyll and social share (og: tag) friendly
 - [x] 100% Ruby @ RubyGem
 
@@ -54,6 +55,20 @@ I have just created a brand new GitHub repository template that allows you to mo
 [How to use Github Action as your free & no code Medium Posts backup service](https://github.com/ZhgChgLi/ZMediumToMarkdown/wiki/How-to-use-Github-Action-as-your-free-&-no-code-Medium-Posts-backup-service)
 
 ---
+
+## Testing
+
+Run the test suite:
+```bash
+for f in test/test_*.rb; do ruby -Ilib -Itest "$f"; done
+```
+
+Test coverage includes:
+- UTF-8 encoding handling for all languages
+- RTL language support (Arabic, Hebrew)
+- CJK support (Chinese, Japanese, Korean)
+- Parser output validation
+- Markdown rendering
 
 ## Setup
 

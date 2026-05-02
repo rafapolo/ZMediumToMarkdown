@@ -99,7 +99,9 @@ class Request
       if response.nil? || (response && response.code.to_i != 200)
         nil
       else
-        Nokogiri::HTML(response.read_body)
+        body = response.read_body
+        body = encode_to_utf8(body)
+        Nokogiri::HTML(body)
       end
     end
 
@@ -107,7 +109,27 @@ class Request
       if response.nil? || (response && response.code.to_i != 200)
         nil
       else
-        response.read_body
+        body = response.read_body
+        encode_to_utf8(body)
       end
+    end
+
+    def self.encode_to_utf8(body)
+      return body if body.nil? || body.empty?
+
+      body.force_encoding('UTF-8') if body.encoding != Encoding::UTF_8
+
+      body
+    end
+
+    def self.detect_encoding(body)
+      return nil if body.nil? || body.empty?
+
+      if body[0..1000].include?('charset=')
+        charset_match = body[0..1000].match(/charset=["']?([^"'>\s]+)["']?/i)
+        return charset_match[1] if charset_match
+      end
+
+      nil
     end
 end

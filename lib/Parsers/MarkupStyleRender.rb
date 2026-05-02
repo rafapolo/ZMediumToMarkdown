@@ -37,8 +37,7 @@ class MarkupStyleRender
         paragraph.text.each_char do |char|
             chars[index] = TextChar.new([char], "Text")
             index += 1
-            if char.bytes.length >= 4
-                # some emoji need more space (in Medium)
+            if char.bytesize >= 4 && char =~ /[\p{Extended_Pictographic}]/u
                 chars[index] = TextChar.new([], "Text")
                 index += 1
             end

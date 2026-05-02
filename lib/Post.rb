@@ -63,8 +63,8 @@ class Post
 
   def self.parsePostInfoFromPostContent(content, postID, pathPolicy)
     postInfo = PostInfo.new()
-    postInfo.description = content&.dig("Post:#{postID}", "previewContent", "subtitle")&.gsub(/[^[:print:]]/ , '')
-    postInfo.title = content&.dig("Post:#{postID}", "title")&.gsub(/[^[:print:]]/ , '')
+    postInfo.description = content&.dig("Post:#{postID}", "previewContent", "subtitle")
+    postInfo.title = content&.dig("Post:#{postID}", "title")
     postInfo.tags = content&.dig("Post:#{postID}", "tags").map{ |tag| tag["__ref"].gsub! 'Tag:', '' }
     
     previewImage = content&.dig("Post:#{postID}", "previewImage", "__ref")
